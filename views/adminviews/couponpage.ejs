@@ -1,0 +1,196 @@
+<%- include('header') -%>
+
+<style>
+
+    body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding-left: 20vh;
+    display: flex;
+    height: 100vh;
+    background-color: #fff;
+  }
+
+  .container-wrapper {
+    margin-left: 250px;
+  }
+    #sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #343a40;
+    padding-top: 20px;
+    padding-left: 20px;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  #sidebar li {
+    margin-bottom: 15px;
+  }
+
+  #sidebar a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  #sidebar a:hover {
+    background-color: #495057;
+  }
+</style>
+
+
+<div class="container mt-5">
+    <div id="sidebar">
+        <ul>
+          <li><a href="/admin/adminprofile"><i class="fas fa-user-edit"></i> Show Admin Profile</a></li>
+          <li><a href="/admin/dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+          <li><a href="/admin/usermanage"><i class="fas fa-users"></i> User Management</a></li>
+          <li><a href="/categorymanage"><i class="fas fa-list"></i> Category Management</a></li>
+          <li><a href="/productmanage"><i class="fas fa-box"></i> Product Management</a></li>
+          <li><a href="/order"><i class="fas fa-shopping-bag"></i> Order Management</a></li>
+          <li><a href="/coupon"><i class="fas fa-percent"></i> coupon Management</a></li>
+          <li><a href="/admin/offermanage"><i class="fas fa-gift"></i> Offer Management</a></li>
+        </ul>
+        <a href="/admin/logoutadmin"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      </div>
+
+    
+    
+    <h2 class="mb-4">  <button class="btn btn-success" data-toggle="modal" data-target="#addCouponModal">Add Coupon</button></a></h2>
+    <% if (coupons.length > 0) { %>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Coupon Code</th>
+                <th scope="col">Discount</th>
+                <th scope="col">Expiry Date</th>
+                <th scope="col">Purchase Amount</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% coupons.forEach(coupon => { %>
+                <tr>
+                    <td><%= coupon.couponcode %></td>
+                    <td><%= coupon.discount %>%</td>
+                    <td><%= coupon.expirydate.toLocaleString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true }) %></td>
+                    <td><%= coupon.purchaseamount %></td>
+                    <td>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#editCouponModal<%= coupons._id %>" >Edit</button>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <% } else { %>
+        <p>No coupons are available.</p>
+    <% } %>
+</div>
+
+
+<!-- Add Coupon Modal -->
+<div class="modal fade" id="addCouponModal" tabindex="-1" role="dialog" aria-labelledby="addCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCouponModalLabel">Add Coupon</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Your add coupon form goes here -->
+                <form action="/coupon/addcoupon" method="post">
+                    <div class="form-group">
+                        <label for="couponcode">Coupon Code</label>
+                        <input type="text" class="form-control" id="couponcode" name="couponcode" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="discount">Discount</label>
+                        <input type="number" class="form-control" id="discount" name="discount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expirydate">Expiry Date</label>
+                        <input type="date" class="form-control" id="expirydate" name="expirydate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="purchaseamount">Purchase Amount</label>
+                        <input type="number" class="form-control" id="purchaseamount" name="purchaseamount" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Coupon</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- script for not selecting the date before todays date , when Adding the coupon-->
+<script>
+    // Get the current date in the format "YYYY-MM-DD"
+    const currentdate = new Date().toISOString().split('T')[0];
+    // Set the min attribute of the input field to the current date
+    document.getElementById('expirydate').min = currentdate;
+</script>
+
+
+
+
+<!-- Edit Coupon Modal -->
+<div class="modal fade" id="editCouponModal" tabindex="-1" role="dialog" aria-labelledby="editCouponModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCouponModalLabel">Edit Coupon</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Your edit coupon form goes here -->
+                <form action="/coupon/editCoupon/<%= coupons._id %>" method="post">
+                    <div class="form-group">
+                        <label for="editCouponCode">Coupon Code</label>
+                        <input type="text" class="form-control" id="editCouponCode" name="editCouponCode" value="<%= coupons.couponcode %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDiscount">Discount</label>
+                        <input type="number" class="form-control" id="editDiscount" name="editDiscount" value="<%= coupons.discount %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editExpiryDate">Expiry Date</label>
+                        <input type="date" class="form-control" id="editExpiryDate" name="editExpiryDate" value="<%= coupons.expirydate %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPurchaseAmount">Purchase Amount</label>
+                        <input type="number" class="form-control" id="editPurchaseAmount" name="editPurchaseAmount" value="<%= coupons.purchaseamount %>" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- script for not selecting the date before todays date , when edit the coupon-->
+<script>
+    // Get the current date in the format "YYYY-MM-DD"
+    const currentDate = new Date().toISOString().split('T')[0];
+    // Set the min attribute of the input field to the current date
+    document.getElementById('editExpiryDate').min = currentDate;
+</script>
+
+<%- include('footer') -%>

@@ -1,0 +1,96 @@
+<%- include('header') -%>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #f8f9fa;
+  }
+
+  .container {
+    display: flex;
+    width: 100%;
+  }
+
+  #sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #343a40;
+    padding-top: 20px;
+    padding-left: 20px;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  #sidebar li {
+    margin-bottom: 15px;
+  }
+
+  #sidebar a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  #sidebar a:hover {
+    background-color: #495057;
+  }
+
+  #content {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    margin-left: 50px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+  }
+
+  #content h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+<div id="sidebar">
+  <ul>
+    <li><a href="adminprofile"><i class="fas fa-user-edit"></i> Show Admin Profile</a></li>
+    <li><a href="dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+    <li><a href="usermanage"><i class="fas fa-users"></i> User Management</a></li>
+    <li><a href="/categorymanage"><i class="fas fa-list"></i> Category Management</a></li>
+    <li><a href="/productmanage"><i class="fas fa-box"></i> Product Management</a></li>
+    <li><a href="/order"><i class="fas fa-shopping-bag"></i> Order Management</a></li>
+    <li><a href="/coupon"><i class="fas fa-percent"></i> coupon Management</a></li>
+    <li><a href="/admin/offermanage"><i class="fas fa-gift"></i> Offer Management</a></li>
+  </ul>
+  <a href="/admin/logoutadmin"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+
+<div id="content">
+  <h1>Admin Profile Page</h1>
+</div>
+</div>
+
+</body>
+<%- include('footer') -%>

@@ -1,0 +1,147 @@
+<%- include('header') -%>
+
+
+
+<style>
+  body{
+    background-image: url("/images/bg.jpg");
+  }
+  .image-preview {
+    display: flex;
+    flex-wrap: wrap;
+   }
+
+.preview-image {
+    max-width: 100px;
+    max-height: 100px;
+    margin: 5px;
+}
+</style>
+
+<div class="container mt-2">
+  <div class="row justify-content-center">
+      <div class="col-md-8">
+          <div class="card">
+              <div class="card-body">
+                  <h1 class="mb-4 text-center">Edit Product</h1>
+
+                  <!-- Form to add product details -->
+                  <form action="/productmanage/editproduct/<%=editedProduct._id%>" method="POST" enctype="multipart/form-data">
+
+                      <div class="form-group">
+                          <label for="productName">Product Name:</label>
+                          <input type="text" class="form-control" id="productName"  value="<%= editedProduct.productname %>" name="productname" required>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="Category">Category:</label>
+                        <select name="Category" class="form-control" id="Malik" required>
+                            <% if (Category.length > 0) { %>
+                                <% for (let i = 0; i < Category.length; i++) { %>
+                                    <option value="<%= Category[i]._id %>"><%= Category[i].category %></option> 
+                                <% } %>
+                            <% } else { %>
+                                <option value="" disabled>No items available</option>
+                            <% } %>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="price">Price:</label>
+                          <input type="text" class="form-control" value="<%= editedProduct.price %>" id="price" name="price" required>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="rating">Rating:</label>
+                          <input type="text" class="form-control" id="rating"  value="<%= editedProduct.rating %>" name="rating" required>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="model">Model:</label>
+                          <input type="text" class="form-control" id="model"  value="<%= editedProduct.model %>" name="model" required>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="text" class="form-control" id="stock" value="<%= editedProduct.stock %>" name="stock" required>
+                      </div>
+
+                      <div class="form-group">
+                          <label for="description">Description:</label>
+                          <input type="text" class="form-control" id="description"  value="<%= editedProduct.description %>" name="description" required></textarea>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="image">Image:</label>
+                        <input type="file" class="form-control-file" id="image" name="img" accept="image/*" multiple onchange="previewImages(event)">
+                        <div id="image-preview" class="image-preview"></div>
+                      </div>
+
+
+                      <% editedProduct.img.forEach((img, index) => { %>
+                        <input type="hidden" name="currentImages[]" value="<%= img %>">
+                    <% }); %>
+                    
+
+                    <div class="form-group">
+                        <label for="currentImages">Current Images:</label>
+                        <div id="current-images" class="image-preview">
+                            <% editedProduct.img.forEach((img, index) => { %>
+                                <div class="image-container">
+                                    <img style="max-height: 100px; max-width: 100px;" src="<%= img %>" alt="no img">
+                                    <button type="button" class="btn btn-danger remove-image" data-id="<%= editedProduct._id %>" data-image="<%= index %>">Delete</button>
+                                </div>
+                            <% }); %>
+                        </div>
+                    </div>
+
+                      <div class="text-center">
+                          <button type="submit" class="btn btn-success">Confirm Edit</button>
+                      </div>
+
+                  </form>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Handle the click event for the "Remove" button
+        $('.remove-image').on('click', function () {
+            var button = $(this); // Store reference to the button
+            var productId = button.data('id');
+            var imageIndex = button.data('image');
+            // Make an AJAX request to remove the image from the server
+            $.ajax({
+                url: '/productmanage/removeimageprd', // Replace with the actual endpoint on your server
+                method: 'POST', // Use the appropriate HTTP method
+                data: {
+                    productId: productId,
+                    imageIndex: imageIndex
+                },
+                success: function (response) {
+                    // Handle the success response (e.g., update the UI)
+                    console.log(response);
+                    // You may want to remove the image from the UI as well
+                    button.prev('img').remove();
+                    button.remove();
+                    console.log('removed   ....');
+                },
+                error: function (error) {
+                    // Handle the error response
+                    console.error(error);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<%- include('footer') -%>

@@ -1,0 +1,398 @@
+<%- include('header') -%>
+<style>
+.main-navbar{
+  border-bottom: 1px solid #ccc;
+}
+.main-navbar .top-navbar{
+  background-color: #383d44;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.main-navbar .top-navbar .brand-name{
+  color: #fff;
+}
+.main-navbar .top-navbar .nav-link{
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+.main-navbar .top-navbar .dropdown-menu{
+  padding: 0px 0px;
+  border-radius: 0px;
+}
+.main-navbar .top-navbar .dropdown-menu .dropdown-item{
+  padding: 8px 16px;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+}
+.main-navbar .top-navbar .dropdown-menu .dropdown-item i{
+  width: 20px;
+  text-align: center;
+  color: #859ec7;
+  font-size: 14px;
+}
+.main-navbar .navbar{
+  padding: 0px;
+  background-color: #ddd;
+}
+.main-navbar .navbar .nav-item .nav-link{
+  padding: 8px 20px;
+  color: #000;
+  font-size: 15px;
+}
+
+@media only screen and (max-width: 600px) {
+  .main-navbar .top-navbar .nav-link{
+      font-size: 12px;
+      padding: 8px 10px;
+  }
+}
+</style>
+
+
+<div class="main-navbar shadow-sm sticky-top bg-white">
+  <div class="top-navbar">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block">
+                  <h5 class="brand-name">My Cart</h5>
+              </div>
+              <div class="col-md-5 my-auto">
+                  <form role="search">
+                      <div class="input-group ">
+                          <input type="search" placeholder="Search your product" class="form-control" />
+                          <button class="btn bg-white" type="submit">
+                              <i class="fa fa-search"></i>
+                          </button>
+                      </div>
+                  </form>
+              </div>
+              <div class="col-md-5 my-auto">
+                  <ul class="nav justify-content-end">
+                      
+                      <li class="nav-item">
+                          <a class="nav-link" href="#">
+                              
+                          </a>
+                      </li>
+                      <!-- <li class="nav-item">
+                          <a class="nav-link" href="#">
+                              <i class="fa fa-heart"></i> Wishlist (0)
+                          </a>
+                      </li> -->
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa fa-sign-in"></i> Login
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <li><a class="dropdown-item" href="/login"><i class="fa fa-user"></i>User Login</a></li>
+                          <li><a class="dropdown-item" href="/register"><i class="fa fa-sign-in"></i>User SignUp</a></li>
+                          <li><a class="dropdown-item" href="/admin"><i class="fa fa-user"></i>Admin Login</a></li>
+                          </ul>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+    <!-- Navbar -->
+  
+    <!-- Background image -->
+    <div
+      class="p-5 text-center bg-image"
+      style="
+        background-image: url('/images/banner.jpg');
+        height: 400px;
+        background-size: contain;
+        
+      "
+    >
+
+    </div>
+    <!-- Background image -->
+  </header>
+
+<div class="container">
+    <h2 class="mt-5 mb-4">Featured Products</h2>
+    <div class="row">
+                <!-- Product 1 -->
+                <div class="col-md-3">
+                    <div class="card product-card">
+                        <img src="/images/iphone 15 collections.jpeg" class="card-img-top img-fluid" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Product 1</h5>
+                            <p class="card-text">Description of Product 1.</p>
+                            <a href="/login" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="col-md-3">
+                    <div class="card product-card">
+                        <img src="/images/headset.webp" class="card-img-top img-fluid" alt="Product 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Product 2</h5>
+                            <p class="card-text">Description of Product 2.</p>
+                            <a href="login" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="card product-card">
+                      <img src="/images/mac.webp" class="card-img-top img-fluid" alt="Product 2">
+                      <div class="card-body">
+                          <h5 class="card-title">Product 2</h5>
+                          <p class="card-text">Description of Product 2.</p>
+                          <a href="/login" class="btn btn-primary">View Details</a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                <div class="card product-card">
+                    <img src="/images/ipad prd.webp" class="card-img-top img-fluid" alt="Product 2">
+                    <div class="card-body">
+                        <h5 class="card-title">Product 2</h5>
+                        <p class="card-text">Description of Product 2.</p>
+                        <a href="/login" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+              <div class="card product-card">
+                  <img src="/images/acer monitor prd.webp" class="card-img-top img-fluid" alt="Product 2">
+                  <div class="card-body">
+                      <h5 class="card-title">Product 2</h5>
+                      <p class="card-text">Description of Product 2.</p>
+                      <a href="/login" class="btn btn-primary">View Details</a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card product-card">
+                <img src="/images/pixel collections.jpeg" class="card-img-top img-fluid" alt="Product 2">
+                <div class="card-body">
+                    <h5 class="card-title">Product 2</h5>
+                    <p class="card-text">Description of Product 2.</p>
+                    <a href="/login" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card product-card">
+              <img src="/images/s22 prd.webp" class="card-img-top img-fluid" alt="Product 2">
+              <div class="card-body">
+                  <h5 class="card-title">Product 2</h5>
+                  <p class="card-text">Description of Product 2.</p>
+                  <a href="/login" class="btn btn-primary">View Details</a>
+              </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card product-card">
+              <img src="/images/ear phone prd.webp" class="card-img-top img-fluid" alt="Product 2">
+              <div class="card-body">
+                  <h5 class="card-title">Product 2</h5>
+                  <p class="card-text">Description of Product 2.</p>
+                  <a href="/login" class="btn btn-primary">View Details</a>
+              </div>
+          </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-center text-white">
+  <!-- Grid container -->
+  <div class="container p-4">
+    <!-- Section: Social media -->
+    <section class="mb-4">
+      <!-- Facebook -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-facebook-f"></i
+      ></a>
+
+      <!-- Twitter -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-twitter"></i
+      ></a>
+
+      <!-- Google -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-google"></i
+      ></a>
+
+      <!-- Instagram -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-instagram"></i
+      ></a>
+
+      <!-- Linkedin -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-linkedin-in"></i
+      ></a>
+
+      <!-- Github -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-github"></i
+      ></a>
+    </section>
+    <!-- Section: Social media -->
+
+    <!-- Section: Form -->
+    <section class="">
+      <form action="">
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center">
+          <!--Grid column-->
+          <div class="col-auto">
+            <p class="pt-2">
+              <strong>Sign up for our newsletter</strong>
+            </p>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-md-5 col-12">
+            <!-- Email input -->
+            <div class="form-outline form-white mb-4">
+              <input type="email" id="form5Example21" class="form-control" />
+              <label class="form-label" for="form5Example21">Email address</label>
+            </div>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-auto">
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-outline-light mb-4">
+              Subscribe
+            </button>
+          </div>
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </form>
+    </section>
+    <!-- Section: Form -->
+
+    <!-- Section: Text -->
+    <section class="mb-4">
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum
+        repellat quaerat voluptatibus placeat nam, commodi optio pariatur est quia magnam
+        eum harum corrupti dicta, aliquam sequi voluptate quas.
+      </p>
+    </section>
+    <!-- Section: Text -->
+
+    <!-- Section: Links -->
+    <section class="">
+      <!--Grid row-->
+      <div class="row">
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+      </div>
+      <!--Grid row-->
+    </section>
+    <!-- Section: Links -->
+  </div>
+  <!-- Grid container -->
+
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    Designed By:
+    <a class="text-white" href="https://mdbootstrap.com/">ME</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
+
+
+
+<%- include('footer') -%>

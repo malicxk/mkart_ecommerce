@@ -1,0 +1,71 @@
+<%- include('header') -%>
+<style>
+body{
+  background-color: gray;
+}
+</style>
+
+<div class="container mt-5">
+    <div class="card p-4" style="max-width: 400px; margin: 0 auto;">
+        <h1 class="mb-4">OTP Verification</h1>
+
+        <% if (msg) { %>
+            <div class="alert alert-success" role="alert">
+                <%= msg %>
+            </div>
+        <% } %>
+
+        <form id="otpVerificationForm" action="/profile/profileOTPpost/<%= userId %>" method="POST">
+            <div class="mb-3">
+                <label for="otpbox" class="form-label">Enter OTP:</label>
+                <input type="text" class="form-control" id="otpbox" name="otpbox" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Verify OTP</button>
+            
+            <div id="timer" class="text-center mt-3"></div>
+
+            <!-- <form action="/profileRndotp/<%= userId %>" method="post">
+              <button type="submit">Resend OTP</button>
+            </form>
+       -->
+        </form>
+    </div>
+</div>
+
+
+<script>
+    // Set the expiration time (in seconds)
+    const expirationTimeInSeconds = <%= typeof expirationTimeInSeconds !== 'undefined' ? expirationTimeInSeconds : 20 %>;
+  
+    // Update the timer every second
+    const timerElement = document.getElementById('timer');
+  
+    let timer = expirationTimeInSeconds;
+    const countdown = setInterval(() => {
+      const minutes = Math.floor(timer / 60);
+      const seconds = timer % 60;
+  
+      if (timer > 0) {
+        // Display the remaining time
+        timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      } else {
+        // Display the expiration message
+        timerElement.textContent = 'OTP has expired. Please request a new OTP.';
+        
+        // Create the resend button
+        const resendBtn = document.createElement('div');
+        resendBtn.id = 'resendBtn';
+        resendBtn.className = 'text-center mt-3';
+        resendBtn.innerHTML = '<a href="/profileRndotp">Resend OTP</a>';
+        timerElement.parentNode.appendChild(resendBtn);
+        
+        // Stop the countdown when the timer reaches zero
+        clearInterval(countdown);
+      }
+  
+      // Decrement the timer only if it's greater than 0
+      timer = Math.max(0, timer - 1);
+    }, 1000);
+  </script>
+
+<%- include('footer') -%>

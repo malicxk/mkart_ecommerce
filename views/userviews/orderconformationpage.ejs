@@ -1,0 +1,47 @@
+<%- include('header') -%>
+
+<div>
+    <h1>Order Confirmation</h1>
+
+    <section>
+        <h2>Order Summary</h2>
+        <p>Order Number: <%= orderNumber %></p>
+        <p>Order Date and Time: <%= orderDate %></p>
+
+        <h3>Items</h3>
+        <ul>
+            <% items.forEach(item => { %>
+                <li><%= item.name %> x <%= item.quantity %> - $<%= item.price.toFixed(2) %></li>
+            <% }); %>
+        </ul>
+
+        <p>Subtotal: $<%= subtotal.toFixed(2) %></p>
+        <p>Shipping Fee: $<%= shippingFee.toFixed(2) %></p>
+        <p>Tax: $<%= tax.toFixed(2) %></p>
+        <p>Total: $<%= total.toFixed(2) %></p>
+    </section>
+
+    <section>
+        <h2>Billing Information</h2>
+        <p>Name: <%= billingInfo.name %></p>
+        <p>Address: <%= billingInfo.address %></p>
+        <!-- Add other billing information fields as needed -->
+    </section>
+
+    <section>
+        <h2>Shipping Information</h2>
+        <p>Address: <%= shippingInfo.address %></p>
+        <p>Shipping Method: <%= shippingInfo.method %></p>
+    </section>
+
+    <section>
+        <h2>Payment Information</h2>
+        <p>Method: <%= paymentInfo.method %></p>
+        <p>Last Four Digits: <%= paymentInfo.lastFourDigits %></p>
+    </section>
+
+    <!-- Add other sections as needed (confirmation message, account information, customer support, etc.) -->
+
+</div>
+
+<%- include('footer') -%>

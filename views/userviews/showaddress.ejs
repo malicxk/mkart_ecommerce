@@ -1,0 +1,212 @@
+<%- include('header') -%>
+
+<style>
+  body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+  }
+
+  .container {
+      margin-top: 50px;
+  }
+
+  #sidebar {
+      height: 100vh;
+      width: 250px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: #343a40; /* Bootstrap dark background color */
+      padding-top: 20px;
+      padding-left: 20px;
+      border-right: 1px solid #ccc;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Added box shadow for separation */
+  }
+
+  #sidebar ul {
+      list-style-type: none;
+      padding-left: 0;
+  }
+
+  #sidebar li {
+      margin-bottom: 15px;
+  }
+
+  #sidebar a {
+      text-decoration: none;
+      color: #fff;
+      display: block;
+      padding: 15px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.3s ease; /* Smooth background color transition */
+  }
+
+  #sidebar a:hover {
+      background-color: #495057; /* Hover background color */
+  }
+
+  .content-wrapper {
+      margin-left: 250px;
+      padding: 20px;
+  }
+
+  h2 {
+      color: #333;
+      margin-bottom: 20px;
+  }
+
+  .table-container {
+      margin-top: 20px;
+  }
+
+  .table-container table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+  }
+
+  .table-container th, .table-container td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+  }
+
+  .table-container th {
+      background-color: #212529;
+      color: #fff;
+  }
+
+  .btn-container {
+      display: flex;
+      gap: 10px;
+  }
+
+  .btn-delete,
+  .btn-edit {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  }
+
+  .btn-delete {
+      background-color: #dc3545;
+      color: #fff;
+  }
+
+  .btn-delete:hover {
+      background-color: #c82333;
+  }
+
+  .btn-edit {
+      background-color: #ffc107;
+      color: #212529;
+  }
+
+  .btn-edit:hover {
+      background-color: #d39e00;
+  }
+</style>
+
+<!-- Sidebar -->
+<div id="sidebar">
+  <ul>
+      <li><a href="/profile/address"><i class="fas fa-address-book"></i> Show Address</a></li>
+      <li><a href="/profile/orders"><i class="fas fa-shopping-cart"></i> Show Orders</a></li>
+      <li><a href="/profile/addAddress"><i class="fas fa-plus"></i> Add Address</a></li>
+      <li><a href="/profile"><i class="fas fa-user-edit"></i> Show Profile</a></li>
+  </ul>
+  <a href="/userHome" id="home-link"><i class="fas fa-home"></i> Home</a>
+</div>
+
+<!-- Content -->
+<div class="content-wrapper">
+  <h2>Your Addresses</h2>
+  <div class="table-container">
+      <% if (useraddress.length > 0) { %>
+          <table class="table table-bordered">
+              <thead class="thead-dark">
+                  <tr>
+                      <th scope="col">#</th>
+                      <th scope="col"> Name</th>
+                      <!-- <th scope="col">Last Name</th> -->
+                      <th scope="col">Address</th>
+                      <th scope="col">City</th>
+                      <th scope="col">State</th>
+                      <th scope="col">Pincode</th>
+                      <th scope="col">Phone</th>
+                      <th scope="col">Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <% for (let i = 0; i < useraddress.length; i++) { %>
+                      <% const address = useraddress[i]; %>
+                      <tr>
+                          <th scope="row"><%= i + 1 %></th>
+                          <td><%= address.firstname+" "+address.lastname %></td>
+                          <!-- <td><%= address.lastname %></td> -->
+                          <td><%= address.address %></td>
+                          <td><%= address.city %></td>
+                          <td><%= address.state %></td>
+                          <td><%= address.pincode %></td>
+                          <td><%= address.phone %></td>
+                          <td class="btn-container">
+                              <button class="btn btn-danger"  onclick="showConfirmationModal('<%= address._id %>')">Delete</button>
+                              <a href="/profile/editAddress/<%= address._id %>" class="btn btn-warning btn-edit">Edit</a>
+                          </td>
+                      </tr>
+                  <% } %>
+              </tbody>
+          </table>
+      <% } else { %>
+          <div class="alert alert-info" role="alert">
+              No addresses available.
+          </div>
+      <% } %>
+  </div>
+</div>
+
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-light">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+            </div>
+            <div class="modal-body">
+                Are you sure to delete this address?
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+               <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+  <script>
+    let addressToDelete;
+
+    function showConfirmationModal(id) {
+        addressToDelete = id;
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+    }
+
+    function confirmDelete() {
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.hide();
+        window.location.href = "/profile/deleteAddress/" + addressToDelete;
+    }
+</script>
+
+<%- include('footer') -%>

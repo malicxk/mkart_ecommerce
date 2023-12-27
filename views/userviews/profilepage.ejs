@@ -1,0 +1,179 @@
+<%- include('header') -%>
+
+<!-- <style>
+  body{
+    background-image: url("/images/userbg.avif");
+  }
+</style> -->
+<style>
+  body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      background-color: #f8f9fa;
+  }
+
+  .container {
+      display: flex;
+      width: 100%;
+      padding: 20px;
+  }
+
+  #sidebar {
+      height: 100vh;
+      width: 250px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      background-color: #343a40;
+      padding-top: 20px;
+      padding-left: 20px;
+      border-right: 1px solid #ccc;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar ul {
+      list-style-type: none;
+      padding-left: 0;
+  }
+
+  #sidebar li {
+      margin-bottom: 15px;
+  }
+
+  #sidebar a {
+      text-decoration: none;
+      color: #fff;
+      display: block;
+      padding: 15px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+  }
+
+  #sidebar a:hover {
+      background-color: #495057;
+  }
+
+  #content {
+      flex: 1;
+      padding: 20px;
+      background-color: #fff;
+      margin-left: 250px;
+      
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center; /* Center align the content */
+  }
+
+  #content h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #333;
+  }
+
+  #content form {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto; /* Center the form */
+  }
+
+  #profileImage {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 20px;
+  }
+
+  #changePasswordButton {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  }
+
+  #changePasswordButton:hover {
+      background-color: #0056b3;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div id="sidebar">
+      <ul>
+          <li><a href="/profile/address"><i class="fas fa-address-book"></i> Show Address</a></li>
+          <li><a href="/profile/orders"><i class="fas fa-shopping-cart"></i> Show Orders</a></li>
+          <li><a href="/profile/addAddress"><i class="fas fa-plus"></i> Add Address</a></li>
+          <li><a href="/profile"><i class="fas fa-user-edit"></i> Show Profile</a></li>
+          <li><a href="/profile/wallet"><i class="fas fa-wallet"></i>Show Wallet</a></li>
+          <li><a href="/admin"> go to admin side</a></li>
+      </ul>
+      <a href="/userHome" id="home-link"><i class="fas fa-home"></i> Home</a>
+  </div>
+
+  <div id="content">
+      <!-- Display profile image -->
+      <!-- <img src="/path/to/placeholder-image.jpg" alt="Profile Image" id="profileImage"> -->
+      <h1>User Details</h1>
+
+      <form>
+          <div class="form-group">
+              <label for="username"><i class="fas fa-user"></i> Username:</label>
+              <input type="text" class="form-control" id="username" value="<%= userdetails.Username %>" readonly>
+          </div>
+
+          <div class="form-group">
+              <label for="email"><i class="fas fa-envelope"></i> Email ID:</label>
+              <input type="email" class="form-control" id="email" value="<%= userdetails.email %>" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="wallet"><i class="fas fa-wallet"></i> Wallet Balance:</label>
+            <input type="wallet" class="form-control" id="wallet" value="₹<%= userdetails.wallet %>" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="referalcode"><i class="fas fa-"></i> Referral Code:</label>
+            
+            <% if (userdetails.referalcode) { %>
+              <input type="text" class="form-control" id="referalcode" value="<%= userdetails.referalcode %>" readonly>
+            <% } else { %>
+              <p>No referral code available.</p>
+            <% } %>
+          </div>
+
+          <div class="form-group">
+            <label for="referalcode"><i class="fas fa-"></i> Referral Link:</label>
+            
+            <% if (userdetails.referallink) { %>
+              <input type="text" class="form-control" id="referallink" value="<%= userdetails.referallink %>" readonly>
+            <% } else { %>
+              <p>No referral link available.</p>
+            <% } %>
+          </div>
+
+          <!-- Button container -->
+          <div class="btn-container">
+              <!-- Button to change password -->
+              <a href="/profile/changepass" class="btn btn-danger btn-lg" id="changePasswordButton"><i class="fas fa-key"></i> Change Password</a>
+              <!-- Button to edit user details -->
+              <a href="/profile/edituser/1" class="btn btn-warning btn-lg mt-4"><i class="fas fa-edit"></i> Edit User Details</a>
+          </div>
+      </form>
+  </div>
+</div>
+
+
+
+
+ <%- include('footer') -%>

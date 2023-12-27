@@ -1,0 +1,127 @@
+<%- include('header') -%>
+
+<style>
+  body {
+      background-color: #f8f9fa;
+      background-image: url("/images/signupbg.avif");
+      background-size: cover;
+  }
+
+  .card {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 80%; 
+      margin: auto;
+      margin-top: 10%;
+      border-radius: 10px; 
+      position: relative;
+      height: max-content;
+  }
+
+  .card-header {
+      background-color: #3c3c3c;
+      color: #fff;
+      text-align: center;
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  }
+
+  .error-message {
+      height: 2rem; /* Set a fixed height for the error message container */
+  }
+
+  .form-group {
+      margin-bottom: 1.5rem;
+      width: 25rem;
+  }
+
+  .form-control {
+      width: 100%; 
+  }
+
+  .btn-primary {
+      background-color: #4b4b4b;
+      border-color: #000000;
+  }
+
+  .btn-primary:hover {
+      background-color: #000000;
+      border-color: #000000;
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6 m-auto">
+        <div class="card">
+            <h1 class="card-header"><i class="fas fa-sign-in-alt"></i> Login</h1>
+
+            <!-- Wrap the error message in a separate div -->
+            <div class="error-message">
+                <% if(typeof msg !=='undefined' ){%>
+                    <div class="alert alert-danger text-center">
+                        <%= msg %>
+                    </div>
+                <% } %>
+            </div>
+
+            <form action="/login" method="POST" class="card-body" novalidate>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="form-control"
+                        placeholder="Enter Email"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="form-control"
+                        placeholder="Enter Password"
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <p class="lead mt-4 text-center">
+                No Account? <a href="/register">Sign Up</a>
+            </p>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const emailInput = document.getElementById('email');
+
+      emailInput.addEventListener('input', function() {
+          const emailValue = emailInput.value.trim();
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+          const isValidEmail = emailRegex.test(emailValue);
+
+          if (!isValidEmail) {
+              emailInput.setCustomValidity('Enter a valid email address');
+          } else {
+              emailInput.setCustomValidity('');
+          }
+      });
+  });
+</script>
+
+<%- include('footer') -%>

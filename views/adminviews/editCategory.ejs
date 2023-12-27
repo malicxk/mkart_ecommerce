@@ -1,0 +1,45 @@
+<%- include('header') -%>
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Edit Category</h4>
+                    <% if (typeof error !== 'undefined') { %>
+                        <div class="error-message">
+                            <%= error %>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="card-body" id="editCategoryForm">
+                    <!-- Update Category Form -->
+                    <form action="/categorymanage/editcategory/<%=datasdb._id%>" method="POST">
+                        <div class="form-group">
+                            <label for="categoryName">Category Name:</label>
+                            <input type="text" class="form-control" id="categoryName" name="categoryname" value="<%= datasdb.category %>" required>
+                        </div>
+                        <a href="/categorymanage" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> 
+                        </a>
+                        <button type="submit" class="btn btn-success">Confirm Edit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /* #editCategoryForm {
+        background-image: url("/images/bg.jpg");
+        background-size: contain;
+    } */
+    body {
+        background-image: url("/images/bg.jpg");
+        background-size: cover;
+    }
+</style>
+<%- include('footer') -%>

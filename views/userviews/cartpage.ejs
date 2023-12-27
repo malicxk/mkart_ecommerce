@@ -1,0 +1,232 @@
+<%- include('header') -%>
+  <style>
+  .main-navbar{
+    border-bottom: 1px solid #ccc;
+  }
+  .main-navbar .top-navbar{
+    background-color: #383d44;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .main-navbar .top-navbar .brand-name{
+    color: #fff;
+  }
+  .main-navbar .top-navbar .nav-link{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .main-navbar .top-navbar .dropdown-menu{
+    padding: 0px 0px;
+    border-radius: 0px;
+  }
+  .main-navbar .top-navbar .dropdown-menu .dropdown-item{
+    padding: 8px 16px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+  }
+  .main-navbar .top-navbar .dropdown-menu .dropdown-item i{
+    width: 20px;
+    text-align: center;
+    color: #859ec7;
+    font-size: 14px;
+  }
+  .main-navbar .navbar{
+    padding: 0px;
+    background-color: #ddd;
+  }
+  .main-navbar .navbar .nav-item .nav-link{
+    padding: 8px 20px;
+    color: #000;
+    font-size: 15px;
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .main-navbar .top-navbar .nav-link{
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+  }
+
+  .enlarged-image {
+  max-width: 100%; /* Adjust the max-width as needed */
+  height: auto;   /* Maintain aspect ratio */
+  width: 100%;    /* Ensure the image fills its container */
+}
+
+.enlarged-price {
+  font-size: 1.5rem; /* Adjust the font size as needed */
+  /* Add any additional styling you want for the price */
+}
+.quantity-control {
+    margin-top: 10px; /* Adjust the top margin as needed */
+}
+
+.quantity-btn {
+    font-size: 16px; /* Adjust the font size of the buttons as needed */
+}
+
+.quantity-input {
+    width: 80px; /* Adjust the width of the input field as needed */
+    text-align: center; /* Center-align text in the input field */
+    margin: 0 5px; /* Add some margin to the sides of the input field */
+}
+
+  </style>
+
+  <!-- Navbar -->
+  <div class="main-navbar shadow-sm sticky-top bg-white">
+    <div class="top-navbar">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block">
+                   <a href="/userHome"><h5 class="brand-name">My Cart</h5></a> 
+                </div>
+                <div class="col-md-5 my-auto">
+                    
+                </div>
+                <div class="col-md-5 my-auto">
+                    <ul class="nav justify-content-end">
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cart">
+                                <i class="fa fa-shopping-cart"></i> Cart 
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fa fa-heart"></i> Wishlist (0)
+                            </a>
+                        </li> -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user"></i> Profile
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="/profile/orders"><i class="fa fa-list"></i> My Orders</a></li>
+                            <!-- <li><a class="dropdown-item" href="#"><i class="fa fa-heart"></i> My Wishlist</a></li> -->
+                            <li><a class="dropdown-item" href="/cart"><i class="fa fa-shopping-cart"></i> My Cart</a></li>
+                            <li><a class="dropdown-item" href="/login"><i class="fa fa-sign-out"></i> Login</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+
+  <div class="container  me-2 mt-5" >
+    
+    <% if (cartItems && cartItems.length > 0) { %>
+      <h2>Your Cart</h2></div>
+      <div class="row">
+        <% cartItems.forEach((item, index) => { %>
+          <div class="col-md-6 mb-4">
+            <div class="card" style="max-height: 300px;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src="<%= item.img[0] %>" alt="<%= item.product %>" class="img-fluid enlarged-image">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title enlarged-price"><%= item.product %></h5>
+                    <p class="card-text">
+                      <% let offerPrice = item.price; %>
+                      <% const matchingOffer = offers.find(offer => offer.cartItem.product === item.product && offer.offer !== null); %>
+                      <% if (matchingOffer) { %>
+                        <% offerPrice = item.price - (item.price * (matchingOffer.offer.discount / 100)); %>
+                      <% } %>
+                      <strong>Offer Price:</strong><strong class="enlarged-price">₹ <%= offerPrice %></strong> 
+                    </p>
+
+                    <p class="text-danger" id="message_<%= index %>"></p>
+
+                    <div class="d-flex align-items-center quantity-control">
+                      <button class="btn btn-outline-secondary quantity-btn" onclick="subtractQuantity('<%= item._id %>', '<%= offerPrice %>', '<%= index %>')">-</button>
+                      <input type="text" class="quantityInput_<%= index %> form-control quantity-input" value="<%= item.quantity %>" readonly>
+                      <button class="btn btn-outline-secondary quantity-btn" onclick="addQuantity('<%= item._id %>', '<%= offerPrice %>', '<%= index %>')">+</button>
+                    </div>
+                    <p class="mt-3"><strong>Total:</strong><strong class="enlarged-price"> ₹<span class="total_<%= index %>"><%= (offerPrice * item.quantity).toFixed(2) %></span></strong></p>
+                    <a href="/cart/remove/<%= item._id %>" class="btn btn-danger">Remove</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    
+    
+
+  <!-- Bootstrap JS and dependencies (jQuery, Popper.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+  <!-- Your custom script for updating quantity and total price -->
+  <!-- Include jQuery if not already included -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <script>
+    function subtractQuantity(productId, price, index) {
+      fetch(`/cart/subquantity/${productId}`)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          handleQuantityUpdate(data, price, index);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+  
+    function addQuantity(productId, price, index) {
+      fetch(`/cart/addquantity/${productId}`)
+        .then(response => {
+          return response.json();
+        })
+        .then(data => {
+          handleQuantityUpdate(data, price, index);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+  
+    function handleQuantityUpdate(data, price, index) {
+    const quantityInput = document.querySelector(`.quantityInput_${index}`);
+    const totalPrice = document.querySelector(`.total_${index}`);
+    const messageContainer = document.querySelector(`#message_${index}`);
+
+    if (data.message) {
+      // Display the message to the user in the designated container
+      messageContainer.textContent = data.message;
+    } else {
+      // Clear any previous messages
+      messageContainer.textContent = "";
+    }
+
+    // Update the quantity and total in the UI
+    quantityInput.value = data.updatedQuantity;
+    totalPrice.innerHTML = `<strong></strong>${(price * data.updatedQuantity).toFixed(2)}`;
+  }
+  </script>
+
+  <div class="text-center mt-4">
+    <a href="/cart/checkout" class="btn btn-success btn-lg">Proceed to Checkout</a>
+  </div>
+  <br>
+  <br>
+  <div class="text-center mt-4">
+   
+  </div>
+
+  <% } else { %>
+    <h1>Your Cart is Empty</h1>
+<% } %>
+
+  <%- include('footer') -%>

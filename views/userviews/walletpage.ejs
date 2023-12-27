@@ -1,0 +1,115 @@
+<%- include('header') -%>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
+  
+    .container {
+        margin-top: 50px;
+    }
+  
+    #sidebar {
+        height: 100vh;
+        width: 250px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background-color: #343a40; /* Bootstrap dark background color */
+        padding-top: 20px;
+        padding-left: 20px;
+        border-right: 1px solid #ccc;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Added box shadow for separation */
+    }
+  
+    #sidebar ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+  
+    #sidebar li {
+        margin-bottom: 15px;
+    }
+  
+    #sidebar a {
+        text-decoration: none;
+        color: #fff;
+        display: block;
+        padding: 15px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s ease; /* Smooth background color transition */
+    }
+  
+    #sidebar a:hover {
+        background-color: #495057; /* Hover background color */
+    }
+  
+    .content-wrapper {
+        margin-left: 250px;
+        padding: 20px;
+    }
+  
+    h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+  
+    .table-container {
+        margin-top: 20px;
+    }
+  
+  
+    .btn-container {
+        display: flex;
+        gap: 10px;
+    }
+  
+    .btn-delete,
+    .btn-edit {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+  
+    .btn-delete {
+        background-color: #dc3545;
+        color: #fff;
+    }
+  
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+  
+    .btn-edit {
+        background-color: #ffc107;
+        color: #212529;
+    }
+  
+    .btn-edit:hover {
+        background-color: #d39e00;
+    }
+  </style>
+  
+  <!-- Sidebar -->
+  <div class="container">
+    <div id="sidebar">
+        <ul>
+            <li><a href="/profile/address"><i class="fas fa-address-book"></i> Show Address</a></li>
+            <li><a href="/profile/orders"><i class="fas fa-shopping-cart"></i> Show Orders</a></li>
+            <li><a href="/profile/addAddress"><i class="fas fa-plus"></i> Add Address</a></li>
+            <li><a href="/profile/wallet"><i class="fas fa-wallet"></i>Show Wallet</a></li>
+            <li><a href="/profile"><i class="fas fa-user-edit"></i> Show Profile</a></li>
+        </ul>
+        <a href="/userHome" id="home-link"><i class="fas fa-home"></i> Home</a>
+      </div>
+  </div>
+  
+  
+<%- include('footer') -%>

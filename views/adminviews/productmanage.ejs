@@ -1,0 +1,261 @@
+<%- include('header') -%>
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #f8f9fa;
+  }
+
+  .container {
+    flex: 1;
+    display: flex;
+    width: 100%;
+  }
+
+  #sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #343a40;
+    padding-top: 20px;
+    padding-left: 20px;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  #sidebar li {
+    margin-bottom: 15px;
+  }
+
+  #sidebar a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  #sidebar a:hover {
+    background-color: #495057;
+  }
+
+  .content {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    margin-left: 5px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+    overflow:auto;
+  }
+
+  #content h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .table{
+    width: 100%;
+  }
+  .container-wrapper {
+    margin-left: 250px;
+    margin-top: 5px;
+    
+  }
+  .btn-add-product {
+    background-color: #28a745; 
+    color: #fff; 
+    border: none; 
+    width: 150px;
+}
+
+.btn-add-product:hover {
+   background-color: #218838;
+ }
+
+ .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Add this line to center items horizontally */
+    margin-bottom: 30px; /* Adjust the top margin as needed */
+  }
+
+  .pagination a {
+    padding: 8px 12px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 4px;
+  }
+
+  .pagination a.active {
+    background-color: #000000;
+    color: #fff;
+    border-color: #ffffff;
+  }
+
+</style>
+</head>
+<body>
+
+  
+
+<div class="container-wrapper">
+  <div id="sidebar">
+    <ul>
+      <li><a href="/admin/adminprofile"><i class="fas fa-user-edit"></i> Show Admin Profile</a></li>
+      <li><a href="/admin/dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+      <li><a href="/admin/usermanage"><i class="fas fa-users"></i> User Management</a></li>
+      <li><a href="/categorymanage"><i class="fas fa-list"></i> Category Management</a></li>
+      <li><a href="/productmanage"><i class="fas fa-box"></i> Product Management</a></li>
+      <li><a href="/order"><i class="fas fa-shopping-bag"></i> Order Management</a></li>
+      <li><a href="/coupon"><i class="fas fa-percent"></i> coupon Management</a></li>
+      <li><a href="/admin/offermanage"><i class="fas fa-gift"></i> Offer Management</a></li>
+    </ul>
+    <a href="/admin/logoutadmin"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+
+      
+    
+
+  <div class="container-fluid content">
+    <table class="table">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Product Name</th>
+        <th scope="col">Category</th>
+        <th scope="col">Model</th>
+        <th scope="col">Price</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Stock</th>
+        <!-- <th scope="col">Description</th> -->
+        <th scope="col">Image</th>
+        <th scope="col"><a href="/productmanage/addproduct">
+
+          <button class="btn btn-add-product"><i class="fas fa-plus"></i> Add Product</button>
+
+        </a></th>
+    </tr>
+      <tbody>
+          <% prdlist.forEach((docval, index) => { %>
+              <tr>
+                  <td><%= ((currentPage - 1) * pageSize) + index + 1 %></td>
+                  <td><%= docval.productname %></td>
+                  <td><%= docval.category.category %></td>
+                  <td><%= docval.model %></td>
+                  <td>₹<%= docval.price %></td>
+                  <td><%= docval.rating %></td>
+                  <td><%= docval.stock %></td>
+                  <!-- <td><%= docval.description %></td> -->
+                  <td><img style="max-height: 100px; max-width: 100px;" src="<%=docval.img[0] %>" alt="no img"></td>
+                  <td>
+                    <div class="btn-container">
+                      <a href="/productmanage/editproduct/<%= docval._id %>">
+                        <button class="btn btn-primary">Edit</button>
+                      </a>
+                      <button class="btn btn-danger"  onclick="showConfirmationModal('<%= docval._id %>')">Delete</button>
+                    </div>
+                  </td>
+              </tr>
+          <% }) %>
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+        <a href="/productmanage?page=<%= currentPage - 1 %>&pageSize=<%= pageSize %>">Previous</a>
+      <% } %>
+    
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/productmanage?page=<%= i %>&pageSize=<%= pageSize %>" class="<%= currentPage === i ? 'active' : '' %>">
+          <%= i %>
+        </a>
+      <% } %>
+    
+      <% if (currentPage < totalPages) { %>
+        <a href="/productmanage?page=<%= currentPage + 1 %>&pageSize=<%= pageSize %>">Next</a>
+      <% } %>
+    </div>
+
+
+</div>
+ 
+
+<!-- <footer class="footer fixed-bottom">
+  <div class="container">
+    <span>&copy; Designed by Malik. All rights reserved.</span>
+  </div>
+</footer> -->
+
+<!-- script for product delete -->
+
+
+
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content bg-light">
+          <div class="modal-header bg-warning text-white">
+              <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+          </div>
+          <div class="modal-body">
+              Do you wanna to delete this Product?
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+             <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<script>
+    let productToDelete;
+
+    function showConfirmationModal(id) {
+        productToDelete = id;
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+    }
+
+    function confirmDelete() {
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.hide();
+        window.location.href = "/productmanage/deleteproduct/" + productToDelete;
+    }
+</script>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = parseInt(urlParams.get('page')) || 1;
+  const pageSize = parseInt(urlParams.get('pageSize')) || 10;
+  const totalPages = 5; // Update this with the total number of pages
+
+  // Update pagination links with the current page and pageSize
+  const paginationLinks = document.querySelectorAll('.pagination a');
+  paginationLinks.forEach(link => {
+    const linkPage = parseInt(link.getAttribute('href').split('=')[1]) || 1;
+    link.href = `/productmanage?page=${linkPage}&pageSize=${pageSize}`;
+  });
+</script>
+
+
+
+<%- include('footer') -%>

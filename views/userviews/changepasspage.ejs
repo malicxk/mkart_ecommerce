@@ -1,0 +1,43 @@
+<%- include('header') -%>
+
+<style>
+    body{
+        background-color: gray;
+    }
+    .card {
+        height: 500px;
+    }
+
+</style>
+
+<div class="container mt-5">
+    <div class="card p-4" style="max-width: 400px; margin: 0 auto;">
+        <h1 class="mb-4">Change Password</h1>
+
+        <% if (message) { %>
+            <div class="alert alert-danger" role="alert">
+                <%= message %>
+            </div>
+        <% } %>
+        
+        <form id="changePasswordForm" action="/profile/changedpass" method="POST">
+            <div class="mb-3">
+                <label for="currentPassword" class="form-label">Current Password</label>
+                <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="mb-3">
+                <label for="newPassword" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+            </div>
+            <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+            </div>
+            <button type="submit" class="btn btn-success">Change Password</button>
+        </form>
+    </div>
+</div>
+
+
+
+<%- include('footer') -%>

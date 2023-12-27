@@ -1,0 +1,77 @@
+<%- include('header') -%>
+
+<style>
+  body{
+    background-image: url('/images/bg.jpg'); background-size: contain;
+  }
+</style>
+
+
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3"><i class=""></i>OTP verification</h1>
+      
+      <!-- To display error messages -->
+      <% if(typeof msg !== 'undefined' ){%>
+        <div class="alert alert-success text-center">
+          <%= msg %>
+        </div>
+      <% } %>
+
+      <form action="/otppage" method="POST">
+        <div class="form-group">
+          <label for="otp">Enter your OTP</label>
+          <input
+            type="text"
+            id="otp"
+            name="otpbox"
+            class="form-control"
+            placeholder="Enter OTP"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Verify</button>
+      </form>
+
+      <div id="timer" class="text-center mt-3"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Add this script at the end of your HTML body to handle the timer -->
+<script>
+  // Set the expiration time (in seconds)
+  const expirationTimeInSeconds = <%= typeof expirationTimeInSeconds !== 'undefined' ? expirationTimeInSeconds : 300 %>;
+
+  // Update the timer every second
+  const timerElement = document.getElementById('timer');
+
+  let timer = expirationTimeInSeconds;
+  const countdown = setInterval(() => {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer % 60;
+
+    if (timer > 0) {
+      // Display the remaining time
+      timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    } else {
+      // Display the expiration message
+      timerElement.textContent = 'OTP has expired. Please request a new OTP.';
+      
+      // Create the resend button
+      const resendBtn = document.createElement('div');
+      resendBtn.id = 'resendBtn';
+      resendBtn.className = 'text-center mt-3';
+      resendBtn.innerHTML = '<a href="/resendotp">Resend OTP</a>';
+      timerElement.parentNode.appendChild(resendBtn);
+      
+      // Stop the countdown when the timer reaches zero
+      clearInterval(countdown);
+    }
+
+    // Decrement the timer only if it's greater than 0
+    timer = Math.max(0, timer - 1);
+  }, 1000);
+</script>
+  <%- include('footer') -%>

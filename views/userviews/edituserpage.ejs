@@ -1,0 +1,74 @@
+<%- include('header') -%>
+
+<style>
+    body{
+        background-color: gray;
+    }
+    .error-message {
+            color: red;
+            font-size: 14px;
+        }
+</style>
+
+<div id="content" class="container mt-5">
+    <div class="card p-4" style="max-width: 400px; margin: 0 auto;">
+        <h1 class="mb-4">Edit User Details</h1>
+
+        <form id="editUserForm" action="/profile/editeduser/<%=userdetails._id %>" method="POST" onsubmit="return validateEditUserForm()">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" class="form-control" id="username" name="username" value="<%= userdetails.Username %>">
+                <span class="error-message" id="usernameError"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email ID:</label>
+                <input type="email" class="form-control" id="email" name="email" value="<%= userdetails.email %>" >
+                <span class="error-message" id="emailError"></span>
+            </div>
+
+            <!-- Add other fields as needed -->
+
+            <button type="submit" class="btn btn-primary">Verify</button>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function validateEditUserForm() {
+        // Reset previous error messages
+        document.getElementById('usernameError').innerText = '';
+        document.getElementById('emailError').innerText = '';
+
+        let isValid = true;
+
+        // Check if the username is empty
+        const username = document.getElementById('username').value;
+        if (username.trim() === "") {
+            document.getElementById('usernameError').innerText = 'Username is required';
+            isValid = false;
+        }
+
+        // Check if the email is empty or not valid
+        const email = document.getElementById('email').value;
+        if (email.trim() === "") {
+            document.getElementById('emailError').innerText = 'Email is required';
+            isValid = false;
+        } else if (!isValidEmail(email)) {
+            document.getElementById('emailError').innerText = 'Enter a valid email address';
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function isValidEmail(email) {
+        // Basic email validation using regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+</script>
+
+        
+<%- include('footer') -%>

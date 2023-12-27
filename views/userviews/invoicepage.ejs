@@ -1,0 +1,138 @@
+<%- include('header') -%>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        margin-top: 50px;
+    }
+
+    .card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .table th, .table td {
+        text-align: left;
+    }
+
+    .get-invoice-btn {
+        margin-top: 10px;
+    }
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4>Order Address</h4>
+                    </div>
+                    <div class="card-body">
+                        
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Name</th>
+                                    <td><%= orderAddress.firstname %> <%= orderAddress.lastname %></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Address</th>
+                                    <td><%= orderAddress.address %></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">City</th>
+                                    <td><%= orderAddress.city %></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">State</th>
+                                    <td><%= orderAddress.state %></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Pincode</th>
+                                    <td><%= orderAddress.pincode %></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Phone</th>
+                                    <td><%= orderAddress.phone %></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    
+                <div class="card-header bg-primary text-white">
+                    <h4>Product Details</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% order.productcollection.forEach((product) => { %>
+                            <tr>
+                                <td><%= product.productname %></td>
+                                <td>₹<%=product.price %></td>
+                                <td>₹<%=product.discount %></td>
+                                <td><%= product.quantity %></td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Checkout</h4>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Payment Method</th>
+                                    <td><%= order.paymentmode %></td>
+                                </tr>
+                              <% order.productcollection.forEach((product) => { %>
+                                <tr>
+                                    <th scope="row">Total Price</th>
+                                    <td>
+                                        <% amount = (product.price * product.quantity) - product.discount  %>
+                                        ₹ <%= amount %>
+                                    </td>
+                                </tr>                  
+                            </tbody>
+                        </table>
+
+                        <% if (product.status == "delivered") { %>
+                        <a href="/profile/invoice/<%= order.id %>/<%= product.productid %>" class="btn btn-lg btn-primary get-invoice-btn">Get Invoice</a>
+                        <% } else { %>
+                            <div class="canceled-message">Download Invoice after order is delivered</div>
+                        <% } %>
+
+                    <% }); %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+
+<%- include('footer') -%>

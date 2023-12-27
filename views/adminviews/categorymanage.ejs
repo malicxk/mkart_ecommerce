@@ -1,0 +1,286 @@
+<%- include('header') -%>
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #f8f9fa;
+  }
+
+  .container {
+    display: flex;
+    width: 100%;
+  }
+
+  #sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #343a40;
+    padding-top: 20px;
+    padding-left: 20px;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  #sidebar li {
+    margin-bottom: 15px;
+  }
+
+  #sidebar a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  #sidebar a:hover {
+    background-color: #495057;
+  }
+
+  .content {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    margin-left: 50px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+    overflow:auto;
+  }
+
+  #content h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Add this line to center items horizontally */
+    margin-top: 40vh; /* Adjust the top margin as needed */
+  }
+
+  .pagination a {
+    padding: 8px 12px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 4px;
+  }
+
+  .pagination a.active {
+    background-color: #000000;
+    color: #fff;
+    border-color: #ffffff;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div id="sidebar">
+      <ul>
+        <li><a href="/admin/adminprofile"><i class="fas fa-user-edit"></i> Show Admin Profile</a></li>
+        <li><a href="/admin/dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+        <li><a href="/admin/usermanage"><i class="fas fa-users"></i> User Management</a></li>
+        <li><a href="/categorymanage"><i class="fas fa-list"></i> Category Management</a></li>
+        <li><a href="/productmanage"><i class="fas fa-box"></i> Product Management</a></li>
+        <li><a href="/order"><i class="fas fa-shopping-bag"></i> Order Management</a></li>
+        <li><a href="/coupon"><i class="fas fa-percent"></i> coupon Management</a></li>
+        <li><a href="/admin/offermanage"><i class="fas fa-gift"></i> Offer Management</a></li>
+      </ul>
+      <a href="/admin/logoutadmin"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+  
+
+   <!-- Add Category Modal -->
+   <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+       <div class="modal-dialog" role="document">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                   <% if(locals.msg){%>
+                    <div class="alter alert-success text-center">
+                      <%=msg%>
+                    </div>
+                    <% }%>
+                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                   </button>
+               </div>
+               <div class="modal-body">
+                   
+                   <form action="/categorymanage/addcategory" method="POST">
+                       <div class="form-group">
+                           <label for="categoryName">Category Name:</label>
+                           <input type="text" class="form-control" id="categoryName" name="categoryname" required>
+                       </div>
+                       <button type="submit" class="btn btn-success">Add Category</button>
+                   </form>
+               </div>
+           </div>
+       </div>
+   </div>
+   <!-- End Add Category Modal -->
+</nav>
+<div class="content">
+  <div class="container-fluid">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Brand Name</th>
+                <th scope="col">Action</th>
+                
+                <th scope="col" button class="btn btn-success" data-toggle="modal" data-target="#addCategoryModal">Add Category</button></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% datasdb.forEach((value,index)=>{ %>
+            <tr>
+                <td><%= ((currentPage - 1) * pageSize) + index + 1 %></td>
+                <td><%= value.category %></td>
+                <td>
+                    <a href="/categorymanage/editcategory/<%= value._id %>"><button class="btn btn-primary">Edit</button></a>
+                    <!-- <button class="btn btn-success" onclick="openEditCategoryModal('<%= value._id %>')">Edit Category</button> -->
+                    <button class="btn btn-danger"  onclick="showConfirmationModal('<%= value._id %>')">Delete</button>
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <% if (currentPage > 1) { %>
+      <a href="/categorymanage?page=<%= currentPage - 1 %>&pageSize=<%= pageSize %>">Previous</a>
+    <% } %>
+  
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <a href="/categorymanage?page=<%= i %>&pageSize=<%= pageSize %>" class="<%= currentPage === i ? 'active' : '' %>">
+        <%= i %>
+      </a>
+    <% } %>
+  
+    <% if (currentPage < totalPages) { %>
+      <a href="/categorymanage?page=<%= currentPage + 1 %>&pageSize=<%= pageSize %>">Next</a>
+    <% } %>
+  </div>
+
+</div>
+
+
+<!-- Edit Category Modal  not working -->
+
+<div class="modal fade" id="editCategoryModal" tabindex="-1" role="dialog" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+              <% if(locals.msg){ %>
+               <div class="alert alert-success text-center">
+                 <%= msg %>
+               </div>
+               <% } %>
+              
+          </div>
+          <div class="modal-body">
+              <!-- The  edit category form goes here -->
+              <form action="/categorymanage/editcategory/<%= datasdb._id %>" method="POST">
+                  <div class="form-group">
+                      <label for="categoryName">Category Name:</label>
+                      <input type="text" class="form-control" id="categoryName" name="categoryname" value="<%= datasdb.category %>" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Edit Category</button>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+<!-- Delete Category Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content bg-light">
+          <div class="modal-header bg-success text-white">
+              <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+              <!-- <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button> -->
+          </div>
+          <div class="modal-body">
+              Do you wanna to delete this category?
+          </div>
+          <div class="modal-footer">
+             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+<!-- Functions for Delete Category -->
+
+<script>
+    let categoryToDelete;
+
+    function showConfirmationModal(id) {
+        categoryToDelete = id;
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.show();
+    }
+
+    function confirmDelete() {
+        const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+        modal.hide();
+        window.location.href = "/categorymanage/categorymanage/" + categoryToDelete;
+    }
+</script>
+
+<!-- script  for open edit category modal  not working-->
+<script>
+  function openEditCategoryModal() {
+    $('#editCategoryModal').modal('show');
+  }
+</script>
+
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = parseInt(urlParams.get('page')) || 1;
+  const pageSize = parseInt(urlParams.get('pageSize')) || 10;
+  const totalPages = 5; // Update this with the total number of pages
+
+  // Update pagination links with the current page and pageSize
+  const paginationLinks = document.querySelectorAll('.pagination a');
+  paginationLinks.forEach(link => {
+    const linkPage = parseInt(link.getAttribute('href').split('=')[1]) || 1;
+    link.href = `/categorymanage?page=${linkPage}&pageSize=${pageSize}`;
+  });
+</script>
+
+
+
+<%- include('footer') -%>

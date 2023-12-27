@@ -1,0 +1,471 @@
+<%- include('header') -%>
+
+<style>
+  .main-navbar{
+    border-bottom: 1px solid #ccc;
+  }
+  .main-navbar .top-navbar{
+    background-color: #383d44;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .main-navbar .top-navbar .brand-name{
+    color: #fff;
+  }
+  .main-navbar .top-navbar .nav-link{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .main-navbar .top-navbar .dropdown-menu{
+    padding: 0px 0px;
+    border-radius: 0px;
+  }
+  .main-navbar .top-navbar .dropdown-menu .dropdown-item{
+    padding: 8px 16px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+  }
+  .main-navbar .top-navbar .dropdown-menu .dropdown-item i{
+    width: 20px;
+    text-align: center;
+    color: #859ec7;
+    font-size: 14px;
+  }
+  .main-navbar .navbar{
+    padding: 0px;
+    background-color: #ddd;
+  }
+  .main-navbar .navbar .nav-item .nav-link{
+    padding: 8px 20px;
+    color: #000;
+    font-size: 15px;
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .main-navbar .top-navbar .nav-link{
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+  }
+
+  	/* Custom style for responsive search bar */
+		@media (max-width: 767px) {
+		  .custom-search .input-group {
+			width: 100%;
+      color: #fff;
+		  }
+		}
+
+
+		#suggestions-container {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: calc(100% - 2px);
+            /* Adjust the width to fit the input */
+            padding-left: 10px;
+            background-color: #fff;
+            border: 1px solid #ffffff;
+            border-radius: 0 0 0.25rem 0.25rem;
+            z-index: 1000;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .input-group:focus-within #suggestions-container {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        .suggestion-item:hover {
+            background-color: #ffffff;
+      }
+
+  </style>
+  
+  
+  <div class="main-navbar shadow-sm sticky-top bg-white">
+    <div class="top-navbar">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block">
+                   <a href="/userHome"><h5 class="brand-name">My Cart</h5></a> 
+                </div>
+                <!-- <div class="col-md-5 my-auto">
+                    <form role="search">
+                        <div class="input-group ">
+                            <input type="search" placeholder="Search your product" name="searchInput" class="form-control" />
+                            <button class="btn bg-white" type="submit">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div> -->
+
+                <div class=" ">
+                  <form class="custom-search ">
+                    <div class="input-group">
+                    <input style="background-color: rgb(255, 255, 255); width: 50vh;" type="text" id="searchInput" oninput="performSearch()" autocomplete="off" class="form-control rounded-left " placeholder="Search...">
+                    <div class="input-group-append">
+                    </div>
+                    <div id="suggestions-container"  class="suggestions-container"></div>
+      
+                    </div>
+                  </form>
+                </div>
+
+
+                <div class="col-md-5 my-auto">
+                    <ul class="nav justify-content-end">
+
+
+                        <li class="nav-item">
+                          <a class="nav-link" href="/shop">
+                              <i class="fa fa-cube"></i> Shop
+                          </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/cart">
+                                <i class="fa fa-shopping-cart"></i> Cart 
+                            </a>
+                        </li>
+
+                        
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user"></i> Profile
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="/profile/orders"><i class="fa fa-list"></i> My Orders</a></li>
+                            <li><a class="dropdown-item" href="/shop"><i class="fa fa-shopping-cart"></i>Products</a></li>
+                            <li><a class="dropdown-item" href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+    
+    
+    <!-- Navbar -->
+  
+    <!-- Background image -->
+    <div
+      class="p-5 text-center bg-image"
+      style="
+        background-image: url('/images/banner4.jpg');
+        height: 400px;
+        background-size: contain;
+        padding: 20px;
+        margin-top:0px;
+      "
+    >
+
+    </div>
+    <!-- Background image -->
+  </header>
+
+
+<div class="d-flex justify-content-center"> <h2 class="mt-5 mb-4">Products</h2></div>
+ 
+
+
+<section class="py-2">
+  <div class="container px-1 px-lg-5 mt-5">
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+      <% productdb.slice(0, 8).forEach(product => { %>
+        <div class="col mb-5">
+          <div class="card h-80">
+            <!-- Product image-->
+            <img class="card-img-top" src="<%= product.img[0] %>" alt="Product Image" />
+            <!-- Product details-->
+            <div class="card-body p-4">
+              <div class="text-center">
+                <!-- Product name-->
+                <h5 class="fw-bolder"><%= product.productname %></h5>
+                <!-- Product price-->
+                <!-- $<%= product.price %> -->
+              </div>
+            </div>
+            <!-- Product actions-->
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+              <div class="text-center">
+                <a class="btn btn-outline-dark mt-auto" href="/productdet/<%= product._id %>">View Product</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+
+<!-- Footer -->
+<footer class="bg-dark text-center text-white">
+  <!-- Grid container -->
+  <div class="container p-4">
+    <!-- Section: Social media -->
+    <section class="mb-4">
+      <!-- Facebook -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-facebook-f"></i
+      ></a>
+
+      <!-- Twitter -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-twitter"></i
+      ></a>
+
+      <!-- Google -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-google"></i
+      ></a>
+
+      <!-- Instagram -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-instagram"></i
+      ></a>
+
+      <!-- Linkedin -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-linkedin-in"></i
+      ></a>
+
+      <!-- Github -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-github"></i
+      ></a>
+    </section>
+    <!-- Section: Social media -->
+
+    <!-- Section: Form -->
+    <section class="">
+      <form action="">
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center">
+          <!--Grid column-->
+          <div class="col-auto">
+            <p class="pt-2">
+              <strong>Sign up for our newsletter</strong>
+            </p>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-md-5 col-12">
+            <!-- Email input -->
+            <div class="form-outline form-white mb-4">
+              <input type="email" id="form5Example21" class="form-control" />
+              <label class="form-label" for="form5Example21">Email address</label>
+            </div>
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-auto">
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-outline-light mb-4">
+              Subscribe
+            </button>
+          </div>
+          <!--Grid column-->
+        </div>
+        <!--Grid row-->
+      </form>
+    </section>
+    <!-- Section: Form -->
+
+    <!-- Section: Text -->
+    <section class="mb-4">
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum
+        repellat quaerat voluptatibus placeat nam, commodi optio pariatur est quia magnam
+        eum harum corrupti dicta, aliquam sequi voluptate quas.
+      </p>
+    </section>
+    <!-- Section: Text -->
+
+    <!-- Section: Links -->
+    <section class="">
+      <!--Grid row-->
+      <div class="row">
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+
+        <!--Grid column-->
+        <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+          <h5 class="text-uppercase">Links</h5>
+
+          <ul class="list-unstyled mb-0">
+            <li>
+              <a href="#!" class="text-white">Link 1</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 2</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 3</a>
+            </li>
+            <li>
+              <a href="#!" class="text-white">Link 4</a>
+            </li>
+          </ul>
+        </div>
+        <!--Grid column-->
+      </div>
+      <!--Grid row-->
+    </section>
+    <!-- Section: Links -->
+  </div>
+  <!-- Grid container -->
+
+  <!-- Copyright -->
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    Designed By:
+    <a class="text-white" href="https://mdbootstrap.com/">ME</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
+
+
+
+<script>
+  function handleClickOutside(event) {
+                const suggestionsContainer = document.getElementById('suggestions-container');
+                const searchInput = document.getElementById('searchInput');
+
+                if (event.target !== searchInput && !searchInput.contains(event.target)) {
+                    suggestionsContainer.style.display = 'none'; // Hide the suggestions when clicking outside
+               }
+			}
+
+    function performSearch() {
+    const searchInput = document.getElementById('searchInput').value;
+    fetch(`/searchproducts?search=${searchInput}`)
+        .then(response => response.json())
+        .then(data => {
+            const suggestionsContainer = document.getElementById('suggestions-container');
+            suggestionsContainer.innerHTML = ''; 
+
+            console.log("data from ", data.products);
+
+            if (data.products.length > 0) {
+                data.products.forEach(product => {
+                    const suggestionDiv = document.createElement('div');
+                    suggestionDiv.classList.add('suggestion-item', 'larger-size');
+                    suggestionDiv.textContent = product.productname;
+                    suggestionDiv.addEventListener('click', () => {
+                        window.location.href = `/productdet/${product._id}`;
+                    });
+                    suggestionsContainer.appendChild(suggestionDiv);
+                });
+            } else {
+                const noSuggestionDiv = document.createElement('div');
+                noSuggestionDiv.classList.add('suggestion-item', 'larger-size');
+                noSuggestionDiv.textContent = 'No products found.';
+                suggestionsContainer.appendChild(noSuggestionDiv);
+            }
+            suggestionsContainer.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+     }
+   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%- include('footer') -%>
+
+
+

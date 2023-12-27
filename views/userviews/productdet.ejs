@@ -1,0 +1,260 @@
+<%- include('header') -%>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<style>
+  .pro{
+    background-color: tomato;
+  }
+  body{
+    background-color:rgb(255, 255, 255);
+    padding-top: 0px;
+  }
+  .textcol{
+    color:rgb(252, 252, 252)
+  }
+  .footer{
+    background-color: rgb(0, 0, 0);
+    height:60px;
+  }
+  .contents{
+    margin-top: 56px;
+  }
+  .product-images {
+      max-width: 800px;
+      margin: auto;
+    }
+  .thumbnail {
+    cursor: pointer;
+  }
+.carousel-container {
+    max-width: 800px; /* Set your desired max-width */
+    margin: auto;
+    height: 400px; /* Set your desired height */
+    overflow: hidden;
+  }
+
+/* Ensure images fit inside the fixed-size container without stretching */
+.carousel-inner img {
+  object-fit: contain;
+  height: 100%;
+  width: 100%;
+}
+.additional-images-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  
+  .additional-image {
+    width: 100%;
+    height: 100px; 
+    object-fit: cover;
+  }
+
+  .larger-image-container {
+    max-width: 800px; /* Set your desired max-width */
+    margin: auto;
+    height: 400px; /* Set your desired height */
+    overflow: hidden;
+}
+
+  #largerImage {
+    width: 100%;
+    height: 100%;
+    object-fit:contain; 
+    display: block; 
+    margin: 0 auto; 
+  }
+  
+  
+
+
+
+
+  
+  .main-navbar{
+    border-bottom: 1px solid #ccc;
+  }
+  .main-navbar .top-navbar{
+    background-color: #383d44;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .main-navbar .top-navbar .brand-name{
+    color: #fff;
+  }
+  .main-navbar .top-navbar .nav-link{
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .main-navbar .top-navbar .dropdown-menu{
+    padding: 0px 0px;
+    border-radius: 0px;
+  }
+  .main-navbar .top-navbar .dropdown-menu .dropdown-item{
+    padding: 8px 16px;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+  }
+  .main-navbar .top-navbar .dropdown-menu .dropdown-item i{
+    width: 20px;
+    text-align: center;
+    color: #859ec7;
+    font-size: 14px;
+  }
+  .main-navbar .navbar{
+    padding: 0px;
+    background-color: #ddd;
+  }
+  .main-navbar .navbar .nav-item .nav-link{
+    padding: 8px 20px;
+    color: #000;
+    font-size: 15px;
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .main-navbar .top-navbar .nav-link{
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+  }
+</style>
+
+
+
+<div class="main-navbar shadow-sm sticky-top bg-white">
+  <div class="top-navbar">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-2 my-auto d-none d-sm-none d-md-block d-lg-block">
+                 <a href="/userHome"><h5 class="brand-name">My Cart</h5></a> 
+              </div>
+              <div class="col-md-5 my-auto">
+                  
+              </div>
+              <div class="col-md-5 my-auto">
+                  <ul class="nav justify-content-end">
+                      
+                      <li class="nav-item">
+                          <a class="nav-link" href="/cart">
+                              <i class="fa fa-shopping-cart"></i> Cart 
+                          </a>
+                      </li>
+                      <!-- <li class="nav-item">
+                          <a class="nav-link" href="#">
+                              <i class="fa fa-heart"></i> Wishlist (0)
+                          </a>
+                      </li> -->
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="fa fa-user"></i> Profile
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <li><a class="dropdown-item" href="/profile"><i class="fa fa-user"></i> Profile</a></li>
+                          <li><a class="dropdown-item" href="/profile/orders"><i class="fa fa-list"></i> My Orders</a></li>
+                          <!-- <li><a class="dropdown-item" href="#"><i class="fa fa-heart"></i> My Wishlist</a></li> -->
+                          <li><a class="dropdown-item" href="/cart"><i class="fa fa-shopping-cart"></i> My Cart</a></li>
+                          <li><a class="dropdown-item" href="/login"><i class="fa fa-sign-out"></i> Login</a></li>
+                          </ul>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-6">
+
+
+      <!-- Larger Image Display -->
+      <div class="larger-image-container">
+        <img id="largerImage" src="<%= productdata.img[0] %>" alt="Selected Product Image" class="largeImage">
+      </div>
+
+      <!-- Additional Images Grid -->
+      <div class="additional-images-container">
+        <% productdata.img.forEach((image, index) => { %>
+          <img src="<%= image %>" alt="Additional Product Image" class="additional-image" onclick="showImage('<%= image %>')">
+        <% }); %>
+      </div>
+
+      
+    </div>
+
+    <div class="col-md-6">
+      <!-- Product Information -->
+      <h1 class="mb-3"><%= productdata.productname %></h1>
+      <p class="text-muted"><%= productdata.category.category %></p>
+
+      <% if (offer != null) { %>
+        <!-- Offer details -->
+        <p class="offer-price"><strong>Offer:</strong> <%= offer.discount %>% Off</p>
+        <p><strong>Old price:</strong> <span class="old-price">₹ <%= productdata.price %></span></p>
+        <% var offerPrice = productdata.price - (productdata.price * (offer.discount / 100)); %>
+        <p><strong>Offer price:</strong> <span class="offer-price">₹ <%= offerPrice.toFixed(2) %></span></p>
+      <% } else { %>
+        <!-- Regular price -->
+        <p><strong>Price:</strong> <span class="regular-price">₹ <%= productdata.price %></span></p>
+      <% } %>
+
+      <!-- Description Tab Content -->
+      <h2>About this item:</h2>
+      <p><%= productdata.description %></p>
+
+      <!-- Add to Cart Button -->
+      <a id="addToCartBtn" href="/cart/add/<%= productdata._id %>" class="btn btn-warning mt-4">Add to Cart</a>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<script src="/js/zoomsl.js"></script> 
+<script src="/js/zoomsl.min.js"></script> 
+
+
+<script>
+  var $j = jQuery.noConflict();
+  $j(document).ready(function () {
+    $j('.largeImage').imagezoomsl({
+      zoomrange: [3, 3]
+    });
+  });
+</script>
+
+
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const largerImage = document.getElementById('largerImage');
+
+    function showImage(imageSrc) {
+      largerImage.src = imageSrc;
+    }
+
+    const additionalImages = document.querySelectorAll('.additional-image');
+
+    additionalImages.forEach(function (image) {
+      image.addEventListener('click', function () {
+        const clickedImageSrc = image.src;
+        showImage(clickedImageSrc);
+      });
+    });
+  });
+</script>
+
+
+
+  <%- include('footer') -%>

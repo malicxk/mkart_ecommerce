@@ -1,0 +1,365 @@
+<%- include('header') -%>
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #fff;
+  }
+
+  .container-wrapper {
+    margin-left: 250px;
+  }
+
+  #sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #343a40;
+    padding-top: 20px;
+    padding-left: 20px;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  #sidebar li {
+    margin-bottom: 15px;
+  }
+
+  #sidebar a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  #sidebar a:hover {
+    background-color: #495057;
+  }
+
+  #content h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+</style>
+
+</head>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+<body>
+
+<div class="container">
+  <div id="sidebar">
+    <ul>
+      <li><a href="adminprofile"><i class="fas fa-user-edit"></i> Show Admin Profile</a></li>
+      <li><a href="dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+      <li><a href="usermanage"><i class="fas fa-users"></i> User Management</a></li>
+      <li><a href="/categorymanage"><i class="fas fa-list"></i> Category Management</a></li>
+      <li><a href="/productmanage"><i class="fas fa-box"></i> Product Management</a></li>
+      <li><a href="/order"><i class="fas fa-shopping-bag"></i> Order Management</a></li>
+      <li><a href="/coupon"><i class="fas fa-percent"></i> coupon Management</a></li>
+      <li><a href="/admin/offermanage"><i class="fas fa-gift"></i> Offer Management</a></li>
+      <li><a href="/login"><i></i> go to user side</a></li>
+    </ul>
+    <a href="/admin/logoutadmin"><i class="fas fa-sign-out-alt"></i> Logout</a>
+  </div>
+
+  <!-- Content Wrapper -->
+  <div id="container-fluid" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Begin Page Content -->
+      <div class="container-wrapper">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <h1 class="h3 mb-0 text-gray-800"></h1>
+        </div>
+
+        <!-- Content Start Here -->
+        <div class="row">
+          <!-- Area Chart -->
+          <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+              <!-- Card Header - Dropdown -->
+              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary"></h6>
+              </div>
+              <!-- Card Body -->
+              <div class="card-body">
+                <label for="chartSelector">Select Chart Type:</label>
+                <select class="form-control" id="chartSelector" onchange="updateChart()">
+                  <option value="mychart1">Daily Orders</option>
+                  <option value="mychart2">Weekly Orders</option>
+                  <option value="mychart3">Yearly Orders</option>
+                </select>
+                <div class="chart-area">
+                  <!-- Chart code start here -->
+                  <div class="chart-container">
+                    <canvas id="mychart1" data-dates="<%= JSON.stringify(dates) %>" data-dailyOrder="<%= JSON.stringify(orderCounts) %>"></canvas>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="mychart2" data-weekly="<%= JSON.stringify(weekdata) %>"></canvas>
+                  </div>
+                  <div class="chart-container">
+                    <canvas id="mychart3" data-yearlyOrders="<%= JSON.stringify(totalOrderCount3) %>"></canvas>
+                  </div>
+                  <!-- Chart code End here -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pie Chart -->
+                <div class="card-body">
+                  <div class="chart-pie pt-4 pb-2">
+                      <div class="">
+                          <div class="col">
+                              <input type="date" name="startingdate" id="startingDate"
+                                  class="form-control">
+                          </div>
+                          <div class="col">
+                              <input type="date" name="endingdate" id="endingDate"
+                                  class="form-control">
+                          </div>
+                      </div>
+                      <br>
+                      <button class="btn btn-primary btn-block mb-"
+                          onclick="generateReport('pdf')">PDF Report</button>
+                      <button class="btn btn-primary btn-block"
+                          onclick="generateReport('excel')">Excel Report</button>
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <script>     
+
+
+function generateReport(reportType) {
+     const startingDate = document.getElementById('startingDate').value;
+     const endingDate = document.getElementById('endingDate').value;
+
+     if (reportType === 'pdf') {
+       // Redirect to the PDF generation route with query parameters
+       window.location.href = `/admin/pdfreport?startingdate=${startingDate}&endingdate=${endingDate}`;
+     } else if (reportType === 'excel') {
+       // Redirect to the Excel generation route with query parameters
+       window.location.href =` /admin/excelreport?startingdate=${startingDate}&endingdate=${endingDate}`;
+     }
+   }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Chart 1
+        const chart1Container = document.querySelector('#mychart1');
+        const rawDates = chart1Container.getAttribute('data-dates');
+        const dates = JSON.parse(rawDates);
+        const rawDailyOrders = chart1Container.getAttribute('data-dailyOrder');
+        const dailyOrders = JSON.parse(rawDailyOrders);
+
+        const orderEndDate = moment(dates[dates.length - 1]); // Use the last order date as the end date
+        const lastSevenDays = [];
+        let orders = [];
+
+        // Generate labels for the last 7 days from the current date
+        for (let i = 6; i >= 0; i--) {
+          const date = orderEndDate.clone().subtract(i, 'days').format('YYYY-MM-DD');
+          let index = dates.indexOf(date);
+          if (index !== -1) {
+            orders.push(dailyOrders[index]);
+          } else {
+            orders.push(0);
+          }
+          lastSevenDays.push(date);
+        }
+
+        const ctx1 = document.getElementById('mychart1').getContext('2d');
+        const masspopchart1 = new Chart(ctx1, {
+          type: 'bar',
+          data: {
+            labels: lastSevenDays,
+            datasets: [{
+              label: 'Daily Orders',
+              data: orders,
+              backgroundColor: ['rgb(54, 162, 235)', 'rgb(255, 99, 132)'],
+              barThickness: 20
+            }]
+          },
+          options: {
+            animation: {
+              duration: 2000,
+              easing: 'easeInOutQuart',
+              onProgress: function (animation) {
+                console.log("progress", animation.progress);
+              },
+              onComplete: function (animation) {
+                console.log('Animation complete');
+              }
+            }
+          }
+        });
+
+
+      //chart 2
+
+
+const chart2Container = document.querySelector('#mychart2');
+document.getElementById("mychart2").style.display = "none";
+const rawWeeklyOrders = chart2Container.getAttribute('data-weekly');
+const WeeklyData = JSON.parse(rawWeeklyOrders);
+
+// Limit the number of weeks to display (adjust as needed)
+const numberOfWeeksToShow = 8;
+
+const currentDate = new Date();
+const currentYear1 = currentDate.getFullYear();
+
+const weeklyLabels = Array.from({ length: numberOfWeeksToShow }, (_, index) => {
+  const weekNumber = index + 1;
+  const startDate = new Date(currentYear1, 0, 1);
+  startDate.setDate(startDate.getDate() + index * 7);
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + 6);
+
+  const startMonth = startDate.getMonth() + 1;
+  const startDay = startDate.getDate();
+
+  const endMonth = endDate.getMonth() + 1;
+  const endDay = endDate.getDate();
+
+  return `Week ${weekNumber} (${startMonth}/${startDay} - ${endMonth}/${endDay})`;
+});
+
+const ctx2 = document.getElementById('mychart2').getContext('2d');
+
+let masspopchart2 = new Chart(ctx2, {
+  type: 'bar',
+  data: {
+    labels: weeklyLabels,
+    datasets: [{
+      label: 'Weekly Orders',
+      data: WeeklyData.slice(0, numberOfWeeksToShow), // Limit data to the selected weeks
+      backgroundColor: 'rgb(54, 162, 235)',
+      barThickness: 20
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart',
+      onProgress: function (animation) {
+        console.log(animation.progress);
+      },
+      onComplete: function (animation) {
+        console.log('Animation complete');
+      }
+    },
+    scales: {
+      x: {
+        type: 'category',
+        labels: weeklyLabels,
+        ticks: {
+          autoSkip: false,
+          maxRotation: 45,
+        }
+      },
+      y: {
+        beginAtZero: true,
+      }
+    }
+  }
+});
+        // Chart 3
+        const chart3Container = document.querySelector('#mychart3');
+        document.getElementById("mychart3").style.display = "none";
+        const rawYearlyOrders = chart3Container.getAttribute('data-yearlyOrders');
+        const yearlyOrders = rawYearlyOrders.split(',').map(Number);
+
+        const currentYear = new Date().getFullYear();
+
+        const yearlyLabels = Array.from({ length: 5 }, (_, index) => currentYear + index);
+
+        const ctx3 = document.getElementById('mychart3').getContext('2d');
+
+        let masspopchart3 = new Chart(ctx3, {
+          type: "bar",
+          data: {
+            labels: yearlyLabels,
+            datasets: [{
+              label: 'Yearly Orders',
+              data: yearlyOrders,
+              backgroundColor: ['rgba(144, 238, 144, 20)', 'rgba(54, 162, 235, 0.2)'],
+              barThickness: 20
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: {
+              duration: 2000,
+              easing: 'easeInOutQuart',
+              onProgress: function (animation) {
+                console.log(animation.progress);
+              },
+              onComplete: function (animation) {
+                console.log('Animation complete');
+              }
+            },
+            scales: {
+              x: {
+                type: 'category',
+                labels: yearlyLabels.map(String),
+                ticks: {
+                  autoSkip: false,
+                  maxRotation: 45,
+                }
+              },
+              y: {
+                beginAtZero: true,
+              }
+            }
+          }
+        });
+      });
+
+      function updateChart() {
+        var selectedChart = document.getElementById("chartSelector").value;
+
+        // Hide all charts
+        document.getElementById("mychart1").style.display = "none";
+        document.getElementById("mychart2").style.display = "none";
+        document.getElementById("mychart3").style.display = "none";
+
+        // Show the selected chart
+        document.getElementById(selectedChart).style.display = "block";
+      }
+    </script>
+
+
+
+
+
+    <%- include('footer') -%>

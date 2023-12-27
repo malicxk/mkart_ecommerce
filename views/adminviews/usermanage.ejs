@@ -1,0 +1,224 @@
+<%- include('header') -%>
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+    background-color: #f8f9fa;
+  }
+
+  .container {
+    display: flex;
+    width: 100%;
+  }
+
+  #sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: #343a40;
+    padding-top: 20px;
+    padding-left: 20px;
+    border-right: 1px solid #ccc;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  #sidebar ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+
+  #sidebar li {
+    margin-bottom: 15px;
+  }
+
+  #sidebar a {
+    text-decoration: none;
+    color: #fff;
+    display: block;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  #sidebar a:hover {
+    background-color: #495057;
+  }
+
+  .content {
+    flex: 1;
+    padding: 50px;
+    background-color: #fff;
+    margin-left: 50px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+  }
+
+  #content h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25vh;
+  }
+
+  .pagination a {
+    padding: 8px 12px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 4px;
+  }
+
+  .pagination a.active {
+    background-color: #000000;
+    color: #fff;
+    border-color: #ffffff;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+<div id="sidebar">
+  <ul>
+    <li><a href="adminprofile"><i class="fas fa-user-edit"></i> Show Admin Profile</a></li>
+    <li><a href="/admin/dashboard"><i class="fas fa-chart-bar"></i> Dashboard</a></li>
+    <li><a href="usermanage"><i class="fas fa-users"></i> User Management</a></li>
+    <li><a href="/categorymanage"><i class="fas fa-list"></i> Category Management</a></li>
+    <li><a href="/productmanage"><i class="fas fa-box"></i> Product Management</a></li>
+    <li><a href="/order"><i class="fas fa-shopping-bag"></i> Order Management</a></li>
+    <li><a href="/coupon"><i class="fas fa-percent"></i> coupon Management</a></li>
+    <li><a href="/admin/offermanage"><i class="fas fa-gift"></i> Offer Management</a></li>
+  </ul>
+  <a href="/admin/logoutadmin"><i class="fas fa-sign-out-alt"></i> Logout</a>
+</div>
+
+
+<div class="container-fluid content">
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Is Blocked</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <!-- here we displaying the userlist by fetching the data from collection db to datasdb -->
+        <tbody id="userTableBody">
+            <% if(datasdb.length > 0) { %>
+        
+                <% datasdb.forEach(function(docval, index) { %>
+                    <tr>
+                        <td><%= ((currentPage - 1) * pageSize) + index + 1 %></td>
+                        <td><%= docval.Username %></td>
+                        <td><%= docval.email %></td>
+                        <td>
+                            <% if(docval.isBlocked) { %>
+                                <span class="text-danger">Blocked</span>
+                            <% } else { %>
+                                <span class="text-success">Not Blocked</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if (docval.isBlocked) { %>
+                                <a href="/admin/blockuser/<%= docval._id %>" class="btn btn-success">Unblock</a>
+                            <% } else { %>
+                                <!-- <a href="/admin/blockuser/<%= docval._id %>" class="btn btn-danger">Block</a> -->
+                                <a href="#" class="btn btn-danger" onclick="showConfirmationModal('<%= docval._id %>')">Block</a>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } %>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+        <a href="/admin?page=<%= currentPage - 1 %>&pageSize=<%= pageSize %>">Previous</a>
+      <% } %>
+    
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="/admin?page=<%= i %>&pageSize=<%= pageSize %>" class="<%= currentPage === i ? 'active' : '' %>">
+          <%= i %>
+        </a>
+      <% } %>
+    
+      <% if (currentPage < totalPages) { %>
+        <a href="/admin?page=<%= currentPage + 1 %>&pageSize=<%= pageSize %>">Next</a>
+      <% } %>
+    </div>    
+    
+    
+
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content bg-light">
+              <div class="modal-header bg-warning text-white">
+                  <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+              </div>
+              <div class="modal-body">
+                  Do you wanna to Block this User?
+              </div>
+              <div class="modal-footer">
+                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-danger" onclick="confirmDelete()">Block</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
+
+
+    <script>
+      let userToBlock;
+  
+      function showConfirmationModal(id) {
+          userToBlock = id;
+          const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+          modal.show();
+      }
+  
+      function confirmDelete() {
+          const modal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+          modal.hide();
+          window.location.href = "/admin/blockuser/" + userToBlock;
+      }
+  </script>
+
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = parseInt(urlParams.get('page')) || 1;
+  const pageSize = parseInt(urlParams.get('pageSize')) || 10;
+  const totalPages = 5; // Update this with the total number of pages
+
+  // Update pagination links with the current page and pageSize
+  const paginationLinks = document.querySelectorAll('.pagination a');
+  paginationLinks.forEach(link => {
+    const linkPage = parseInt(link.getAttribute('href').split('=')[1]) || 1;
+    link.href = `/admin?page=${linkPage}&pageSize=${pageSize}`;
+  });
+</script>
+
+
+
+<%- include('footer') -%>

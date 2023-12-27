@@ -1,0 +1,307 @@
+<%- include('header') -%>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+    }
+
+    .background-color {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+    }
+
+    #sidebar {
+        height: 100vh;
+        width: 250px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        background-color: #343a40;
+        padding-top: 20px;
+        padding-left: 20px;
+        border-right: 1px solid #ccc;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    #sidebar ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+
+    #sidebar li {
+        margin-bottom: 15px;
+    }
+
+    #sidebar a {
+        text-decoration: none;
+        color: #fff;
+        display: block;
+        padding: 15px 20px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background-color 0.3s ease;
+    }
+
+    #sidebar a:hover {
+        background-color: #495057;
+    }
+
+    .container {
+        margin-top: 10px;
+        margin-left: 250px;
+    }
+
+    .table-container {
+        margin-top: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #212529;
+        color: #fff;
+    }
+
+    .cancel-button {
+        color: #fff;
+        background-color: #b91200;
+        border: 1px solid #c0392b;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+    .cancel-button:hover {
+        background-color: #ff2915;
+    }
+
+    .canceled-message {
+        color: #870000;
+        font-weight: bold;
+    }
+
+    .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .pagination a {
+    padding: 8px 12px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 4px;
+  }
+
+  .pagination a.active {
+    background-color: #000000;
+    color: #fff;
+    border-color: #ffffff;
+  }
+  
+</style>
+
+<!-- Sidebar -->
+<div id="sidebar">
+    <ul>
+        <li><a href="/profile/address"><i class="fas fa-address-book"></i> Show Address</a></li>
+        <li><a href="/profile/orders"><i class="fas fa-shopping-cart"></i> Show Orders</a></li>
+        <li><a href="/profile/addAddress"><i class="fas fa-plus"></i> Add Address</a></li>
+        <li><a href="/profile"><i class="fas fa-user-edit"></i> Show Profile</a></li>
+    </ul>
+    <a href="/userHome" id="home-link"><i class="fas fa-home"></i> Home</a>
+</div>
+
+<!-- Order Table -->
+<div class="container background-color">
+    <h2>Your Orders</h2>
+    <div id="noOrdersMessage" style="display: none;">No orders available</div>
+    <div class="table-container">
+        <% if (orders.length > 0) { %>
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Product Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Status</th>
+                <th scope="col">Order Date</th>
+                <th scope="col">Actions</th>
+                <!-- New column for "View More" button -->
+                <th scope="col">View More</th>
+            </tr>
+        </thead>
+                <tbody>
+                    <% orders.forEach((order, index) => { %>
+                        <% order.productcollection.forEach(product => { %>
+                        <tr>
+                            <td><%= ((currentPage - 1) * pageSize) + index + 1 %></td>
+                            <td><%=product.productname %></td>
+                            
+                            <td>₹<%=product.price %></td>
+
+                            <td><%= product.quantity %></td>
+                            <td id="status<%= index %>"><%= product.status %></td>
+                            <td><%= order.orderdate %></td>
+                            <td id="actions<%= index %>">
+                                <% if (product.status !== "Cancelled") { %>
+                                    <button class="cancel-button" onclick="confirmCancel('<%= order._id %>','<%= product.productid %>', '<%= index %>' )">Cancel Order</button>
+                                <% } else { %>
+                                    <div class="canceled-message">Order Canceled</div>
+                                <% } %>
+                            </td>
+                            <td>
+                                <a href="/profile/ordersummary/<%= order._id %>/<%= product.productid %>"><button class="btn btn-primary">View More</button></a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                    <% }); %>
+                </tbody>
+            </table>
+        <% } else { %>
+            <div class="alert alert-info" role="alert">
+                No orders available.
+            </div>
+        <% } %>
+        </div>
+
+
+
+        <div class="pagination">
+            <% if (currentPage > 1) { %>
+              <a href="/profile/orders?page=<%= currentPage - 1 %>&pageSize=<%= pageSize %>">Previous</a>
+            <% } %>
+          
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <a href="/profile/orders?page=<%= i %>&pageSize=<%= pageSize %>" class="<%= currentPage === i ? 'active' : '' %>">
+                <%= i %>
+              </a>
+            <% } %>
+          
+            <% if (currentPage < totalPages) { %>
+              <a href="/profile/orders?page=<%= currentPage + 1 %>&pageSize=<%= pageSize %>">Next</a>
+            <% } %>
+          </div>    
+
+
+        </div>
+
+
+
+        <!-- custom deleting alert -->
+        <div class="modal" id="confirmationModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Cancellation</h5>
+                        
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to cancel this order?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger" onclick="proceedCancellation()">Cancel Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+
+        
+
+        <script>
+            // Function to handle order cancellation
+            async function confirmCancel(orderId, productId, rowIndex) {
+                // Set data attributes to modal elements for use in cancellation
+                document.getElementById('confirmationModal').dataset.orderId = orderId;
+                document.getElementById('confirmationModal').dataset.productId = productId;
+                document.getElementById('confirmationModal').dataset.rowIndex = rowIndex;
+        
+                // Open the modal
+                $('#confirmationModal').modal('show');
+            }
+        
+            // Function to proceed with order cancellation
+            async function proceedCancellation() {
+                try {
+                    // Retrieve data attributes from modal
+                    const orderId = document.getElementById('confirmationModal').dataset.orderId;
+                    const productId = document.getElementById('confirmationModal').dataset.productId;
+                    const rowIndex = document.getElementById('confirmationModal').dataset.rowIndex;
+        
+                    const response = await fetch(`/profile/cancelord/${orderId}/${productId}`, {
+                        method: "GET",
+                    });
+        
+                    console.log("Server response:", response);
+        
+                    if (response.ok) {
+                        updateOrderStatusAndHideActions(rowIndex, "Cancelled");
+                    } else {
+                        console.error("Cancellation failed. Server returned:", response.status, response.statusText);
+                    }
+                } catch (error) {
+                    console.error("Error during cancellation:", error);
+                }
+            }
+        
+            // Function to update order status in the table and hide actions
+            function updateOrderStatusAndHideActions(rowIndex, newStatus) {
+                var statusCell = document.getElementById("status" + rowIndex);
+                if (statusCell) {
+                    statusCell.innerHTML = newStatus;
+                }
+        
+                var actionsCell = document.getElementById("actions" + rowIndex);
+                if (actionsCell) {
+                    actionsCell.innerHTML = '<div class="canceled-message">Order Canceled</div>';
+                }
+        
+                // Close the modal programmatically
+                $('#confirmationModal').modal('hide');
+            }
+        </script>
+
+
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = parseInt(urlParams.get('page')) || 1;
+    const pageSize = parseInt(urlParams.get('pageSize')) || 10;
+    const totalPages = 5; // Update this with the total number of pages
+  
+    // Update pagination links with the current page and pageSize
+    const paginationLinks = document.querySelectorAll('.pagination a');
+    paginationLinks.forEach(link => {
+      const linkPage = parseInt(link.getAttribute('href').split('=')[1]) || 1;
+      link.href = `/profile/orders?page=${linkPage}&pageSize=${pageSize}`;
+    });
+  </script>
+
+
+
+
+<%- include('footer') -%>
