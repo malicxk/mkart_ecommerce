@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const app = new express();
-const Razorpay=require('razorpay')
+
+const Razorpay=require('razorpay');
 //for product image uploading
 const path = require("path");
 const multer = require("multer");
@@ -26,7 +26,7 @@ require('dotenv').config()
 
 //nocache
 const nocache = require("nocache");
-app.use(nocache());
+router.use(nocache());
 
 console.log('id is',process.env.KEY_ID);
 const controls = {
